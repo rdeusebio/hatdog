@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#f4f5fa">
+<title>ITIM05 Flashcard Trainer: Unit 4 and Unit 5 Part 1</title>
+<style>
+:root{--gut:clamp(14px,3vw,28px);--pri:#2849d0;--prit:#fff;--bg:#f4f5fa;--panel:#fff;--ink:#111827;--mute:#566077;--line:#dde1ec;--soft:#eef0f8;--u4:#2849d0;--u4t:#e9eeff;--u5:#b32a7c;--u5t:#fdeaf4;--ok:#12803b;--okt:#e3f5ea;--bad:#c4302b;--badt:#fde8e6;--am:#8a5a00;--amt:#fff1cc;--sh:0 1px 2px rgba(17,24,39,.06),0 14px 30px -18px rgba(17,24,39,.35);--serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;--sans:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--pri:#92aaff;--prit:#0b0e1a;--bg:#0b0e1a;--panel:#141a32;--ink:#e9ecf7;--mute:#9aa3bf;--line:#262e4d;--soft:#1b2243;--u4:#92aaff;--u4t:#18235a;--u5:#ff95cc;--u5t:#3b1631;--ok:#5fd08a;--okt:#12301f;--bad:#ff8f87;--badt:#3a1613;--am:#f1c15c;--amt:#33290f;--sh:0 1px 2px rgba(0,0,0,.4),0 14px 30px -18px rgba(0,0,0,.8)}}
+:root[data-theme=dark]{--pri:#92aaff;--prit:#0b0e1a;--bg:#0b0e1a;--panel:#141a32;--ink:#e9ecf7;--mute:#9aa3bf;--line:#262e4d;--soft:#1b2243;--u4:#92aaff;--u4t:#18235a;--u5:#ff95cc;--u5t:#3b1631;--ok:#5fd08a;--okt:#12301f;--bad:#ff8f87;--badt:#3a1613;--am:#f1c15c;--amt:#33290f;--sh:0 1px 2px rgba(0,0,0,.4),0 14px 30px -18px rgba(0,0,0,.8)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+.app{max-width:980px;margin:0 auto;padding:22px var(--gut) 70px}
+button,select,input,textarea{font:inherit;color:inherit}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.sm,.dh{display:none}
+.chips{display:contents}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--u4);outline-offset:2px}
+.top{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.top h1{font:700 clamp(26px,4.2vw,38px)/1.1 var(--serif);margin:0 0 4px;letter-spacing:-.015em}
+.top p{margin:0;color:var(--mute)}
+.btn{white-space:nowrap;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 14px;cursor:pointer;transition:border-color .15s}
+@media (hover:hover){.btn:hover{border-color:var(--mute)}}
+.btn:disabled{opacity:.4;cursor:default}
+.btn,.g,.mode,.st{transition:transform .1s,border-color .15s,background-color .15s}
+.btn:active:not(:disabled),.g:active,.mode:active,.st:active{transform:scale(.98)}
+.btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.pri{background:var(--pri);color:var(--prit);border-color:var(--pri)}
+
+/* modes */
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 10px}
+.mode{text-align:left;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:8px 14px;cursor:pointer;display:grid;gap:0}
+.mode b{font:700 17px var(--serif)}
+.mode>span{font-size:13.5px;color:var(--mute)}
+.mode .mini{display:flex;gap:6px;align-items:center;font-size:13px;margin-top:4px}
+.mode .mini i{font-style:normal;padding:1px 8px;border-radius:6px;background:var(--soft)}
+.mode.on{border-color:var(--u4);box-shadow:var(--sh)}
+.mode.on b{color:var(--u4)}
+
+/* dashboard */
+.dash{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 12px;box-shadow:var(--sh)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.st{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;border:2px solid transparent;border-radius:12px;padding:6px 10px;cursor:pointer;background:var(--soft)}
+.st .ic{grid-row:1/3;width:28px;height:28px}
+.st b{font:700 21px/1 var(--serif)}
+.st span{font-size:13px;color:var(--mute)}
+.st.new{color:var(--u4)}.st.wrong{color:var(--bad)}.st.learning{color:var(--am)}.st.mastered{color:var(--ok)}
+.st.sel{border-color:currentColor}
+.st b,.st span{color:var(--ink)}.st span{color:var(--mute)}
+.mrow{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+.bar{flex:1;min-width:160px;height:10px;background:var(--soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .35s}
+.mrow small{color:var(--mute)}
+
+/* tabs */
+.tabs{display:flex;gap:6px;margin:16px 0 12px;border-bottom:1px solid var(--line)}
+.tab{background:none;border:0;border-bottom:3px solid transparent;padding:9px 16px;cursor:pointer;font-weight:600;color:var(--mute)}
+.tab.on{color:var(--ink);border-bottom-color:var(--ink)}
+
+/* setup */
+details.setup{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:16px}
+details.setup summary{cursor:pointer;padding:11px 16px;font-weight:600;list-style:none;display:flex;gap:10px}
+details.setup summary::-webkit-details-marker{display:none}
+details.setup summary::before{content:"+";font:700 18px Consolas,monospace;color:var(--mute);width:14px}
+details.setup[open] summary::before{content:"\2212"}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 18px;padding:4px 16px 16px;align-items:end}
+.sgrid label{display:grid;gap:4px;font-size:14px;color:var(--mute)}
+.sgrid select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.sgrid .chk{display:flex;gap:8px;align-items:center;color:var(--ink)}
+.units{display:flex;gap:6px}
+
+/* session bar */
+.sbar{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14.5px;color:var(--mute);margin-bottom:6px}
+.sbar b{color:var(--ink)}
+.sprog{height:7px;background:var(--soft);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.sprog i{display:block;height:100%;width:0;background:var(--u4);transition:width .3s}
+
+/* card */
+.stage{max-width:700px;margin:12px auto 6px}
+.card{display:block;width:100%;padding:0;border:0;background:none;cursor:pointer;perspective:1400px;text-align:left;animation:pop .28s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card.u4{--c:var(--u4)}.card.u5{--c:var(--u5)}
+.card .in{display:grid;min-height:310px;transition:transform .55s;transform-style:preserve-3d}
+.card.on .in{transform:rotateY(180deg)}
+.fr,.bk{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:20px;padding:16px 20px 14px;display:flex;flex-direction:column;gap:12px;position:relative}
+.fr{background:var(--panel);border:1px solid var(--line);border-top:7px solid var(--c);box-shadow:var(--sh)}
+.bk{transform:rotateY(180deg);background:var(--c);color:var(--prit);box-shadow:var(--sh)}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.meta{font-size:13px;color:var(--mute)}
+.bk .meta{color:inherit;opacity:.85}
+.mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.term{font:700 clamp(26px,4.4vw,38px)/1.18 var(--serif);overflow-wrap:anywhere}
+.txt{font-size:clamp(17px,2.4vw,20.5px);line-height:1.55}
+.lab{font-size:13px;opacity:.75}
+.ft{font-size:13px;color:var(--mute)}
+.bk .ft{color:inherit;opacity:.85}
+.bdg{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;padding:3px 11px 3px 6px;border-radius:99px;max-width:100%}
+.bdg svg{width:22px;height:22px;flex:none}
+.bdg.new{background:var(--u4t);color:var(--u4)}
+.bdg.wrong{background:var(--badt);color:var(--bad);box-shadow:inset 0 0 0 1.5px var(--bad)}
+.bdg.learning{background:var(--amt);color:var(--am)}
+.bdg.mastered{background:var(--okt);color:var(--ok)}
+.bk .bdg{background:rgba(255,255,255,.92);color:#111}
+.bk .bdg.new{color:#2849d0}.bk .bdg.wrong{background:#fff;color:#c4302b}.bk .bdg.learning{color:#8a5a00}.bk .bdg.mastered{color:#12803b}
+.bk .bdg span{color:#111}.bk .bdg.wrong span{color:#c4302b}
+.corner{width:50px;height:50px;border-radius:50%;background:#fff;color:var(--bad);display:grid;place-items:center;box-shadow:0 0 0 3px var(--bad);flex:none}
+.corner svg{width:38px;height:38px}
+.ic{display:block}
+
+/* actions */
+.actions{max-width:700px;margin:12px auto 0;display:flex;flex-direction:column;gap:10px}
+.dock{display:grid;gap:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.show{width:100%;padding:13px;font-weight:700;font-size:17px}
+.grade{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g{white-space:normal;display:grid;gap:2px;text-align:left;border:2px solid var(--line);border-radius:14px;padding:11px 14px;cursor:pointer;background:var(--panel)}
+.g b{font-size:16px}.g>span{font-size:13px;color:var(--mute)}
+.g.ok{border-color:var(--ok)}.g.ok b{color:var(--ok)}
+.g.bad{border-color:var(--bad)}.g.bad b{color:var(--bad)}
+@media (hover:hover){.g:hover{background:var(--soft)}}
+kbd{font:12px Consolas,monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:var(--bg)}
+.note{display:block;background:var(--amt);color:var(--ink);border-left:4px solid var(--am);border-radius:10px;padding:7px 12px;font-size:14.5px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}
+.note b{display:block;font-size:12px;color:var(--am);margin-bottom:1px}
+.bk .note{background:rgba(255,255,255,.94);color:#111;border-left-color:#8a5a00}.bk .note b{color:#6b4500}
+.card.nopop{animation:none}
+.lrow .go{display:grid;gap:6px}
+.lrow .note{grid-column:2}
+.fb{min-height:24px;text-align:center;font-size:15px;color:var(--mute)}
+.hint{text-align:center;font-size:15px;color:var(--am);min-height:6px}
+.typed{display:flex;gap:8px}
+.typed input{flex:1;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.cmp{text-align:center;font-size:15px}
+.cmp.good{color:var(--ok)}.cmp.no{color:var(--bad)}.cmp.mid{color:var(--am)}
+.done{max-width:700px;margin:16px auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;box-shadow:var(--sh);text-align:center}
+.done h2{font:700 28px var(--serif);margin:0 0 6px}
+.done ul{list-style:none;padding:0;margin:12px 0;display:grid;gap:6px;text-align:left}
+.done li{display:flex;gap:10px;align-items:center;background:var(--soft);border-radius:10px;padding:6px 12px}
+.done li svg{width:24px;height:24px;color:var(--bad);flex:none}
+
+/* list */
+.lt{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.lt input{flex:1;min-width:180px;padding:9px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.lrow{display:grid;grid-template-columns:auto 1fr auto;gap:6px 14px;align-items:start;background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:12px;padding:10px 14px;margin:8px 0}
+.lrow.u4{--c:var(--u4)}.lrow.u5{--c:var(--u5)}
+.lrow .a{font-weight:700}
+.lrow .d{grid-column:2;font-size:14.5px;color:var(--mute)}
+.lrow .s{font-size:12.5px;color:var(--mute);grid-column:2}
+.lrow .go{grid-row:1/span 4;grid-column:3;align-self:center}
+
+.foot{margin-top:30px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;color:var(--mute);font-size:14px}
+.warn{background:var(--amt);color:var(--am);border-radius:10px;padding:8px 14px;margin:10px 0;font-size:14.5px}
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--ink);max-width:560px;width:92%}
+dialog textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);font:12.5px Consolas,monospace}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+@media (pointer:coarse){kbd,.kh{display:none}}
+@media (max-width:720px){
+:root{--gut:14px}
+.lg{display:none}.sm{display:inline}
+.app{display:flex;flex-direction:column;padding:max(12px,env(safe-area-inset-top)) max(var(--gut),env(safe-area-inset-right)) calc(36px + env(safe-area-inset-bottom)) max(var(--gut),env(safe-area-inset-left))}
+
+/* header */
+.top{order:1;flex-wrap:nowrap;align-items:center;margin-bottom:10px}
+.top p{display:none}
+.top h1{font-size:22px;margin:0}
+#theme{min-height:40px;padding:6px 12px;font-size:14.5px}
+
+/* mode switch */
+.modes{order:2;gap:8px;margin:0 0 8px}
+.mode{padding:8px 12px;gap:0;border-radius:14px;min-height:54px;align-content:center}
+.mode b{font-size:16px;line-height:1.2}
+.mode b .c{display:none}
+.mode b .mm{display:block;font:500 12.5px/1.3 var(--sans);color:var(--mute)}
+.mode>span{display:none}
+.mode.on{background:var(--u4t)}
+.mode.on b .mm{color:var(--ink)}
+
+/* tabs */
+.tabs{order:4;margin:6px 0 10px}
+.tab{flex:1;min-height:44px;padding:0 8px;font-size:16px}
+
+/* panels */
+#pS,#pL{order:5}
+#storewarn{order:6}
+
+/* session setup */
+details.setup{border-radius:14px;margin-bottom:10px}
+details.setup summary{min-height:46px;align-items:center;padding:0 16px}
+.sgrid{grid-template-columns:1fr;gap:14px;padding:4px 16px 16px}
+.sgrid label{font-size:14px}
+.sgrid select{min-height:46px;font-size:16px;border-radius:10px}
+.sgrid .chk{min-height:34px;font-size:16px;gap:12px}
+.sgrid input[type=checkbox]{width:22px;height:22px;accent-color:var(--u4);flex:none}
+.units .btn{flex:1;min-height:44px}
+#restart{min-height:48px;font-weight:700}
+
+/* session stats */
+.sbar{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin:0 0 8px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px 2px;font-size:11.5px;line-height:1.2}
+.sbar span{display:flex;flex-direction:column;align-items:center;text-align:center;gap:1px}
+.sbar b{order:-1;font:700 17px/1.15 var(--serif)}
+.sbar .lg{display:none}
+.sprog{height:6px;margin:0 2px 12px}
+
+/* card */
+#studyBody{display:flex;flex-direction:column;gap:6px}
+.actions{display:contents}
+.stage{width:100%;align-self:center;margin:0 0 4px;scroll-margin-top:8px}
+.done{width:100%}
+.card .in{min-height:260px;min-height:clamp(210px,32svh,330px)}
+.fr,.bk{padding:14px 18px 12px;border-radius:22px;gap:10px}
+.fr{border-top-width:6px}
+.term{font-size:clamp(25px,7vw,32px)}
+.txt{font-size:18px;line-height:1.5}
+.corner{width:40px;height:40px}.corner svg{width:30px;height:30px}
+.bdg{font-size:13px}
+
+/* actions: tools above, answer controls pinned to the bottom */
+.hint{order:1;font-size:15px;line-height:1.4;padding:2px 4px}.hint:empty{display:none}
+.fb{order:2;min-height:0;font-size:14px;line-height:1.4}.fb:empty{display:none}
+.tools{order:3;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tools .btn{min-height:42px;padding:6px 4px;font-size:14px;white-space:normal;line-height:1.15}
+.dock{order:4;position:sticky;bottom:0;z-index:5;margin:0 calc(-1*var(--gut));padding:12px var(--gut) calc(10px + env(safe-area-inset-bottom));gap:8px;background:linear-gradient(to top,var(--bg) 78%,transparent)}
+.show{min-height:54px;font-size:17px;border-radius:14px}
+.typed input{min-height:48px;font-size:16px}
+.typed .btn{min-height:48px;padding:0 18px}
+.cmp{font-size:14px;line-height:1.35;padding:7px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}.cmp:empty{display:none}
+.grade{grid-template-columns:1fr 1fr;gap:8px}
+.g{min-height:50px;justify-items:center;align-content:center;text-align:center;border-radius:14px;padding:8px}
+.g.ok{grid-column:1/-1;background:var(--ok);border-color:var(--ok)}
+.g.ok b{color:var(--prit);font-size:17px}
+.g.bad{background:var(--badt)}
+.g>span{display:none}
+.done{padding:20px 16px;border-radius:20px}
+.done .row{flex-direction:column}
+.done .btn{width:100%;min-height:48px}
+
+/* all cards list */
+.lt{gap:8px}
+.lt input{flex:1 1 100%;min-height:46px;font-size:16px;border-radius:12px}
+.chips{display:flex;flex:1 1 100%;gap:6px;overflow-x:auto;margin:0 calc(-1*var(--gut));padding:2px var(--gut) 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips .btn{flex:none;min-height:40px;border-radius:99px;padding:6px 14px}
+.lrow{grid-template-columns:1fr;gap:6px;padding:12px 14px;border-radius:14px}
+.lrow .b{order:1}
+.lrow .a{order:2;font-size:17px;line-height:1.35}
+.lrow .d{order:3;font-size:15px}
+.lrow .note{order:4}
+.lrow .s{order:5}
+.lrow .go{order:6;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.lrow .d,.lrow .s,.lrow .go,.lrow .note{grid-column:1;grid-row:auto}
+.lrow .go .btn{min-height:44px}
+
+/* progress dashboard sits below the study area on phones */
+.dash{order:7;margin-top:22px;padding:14px;border-radius:18px}
+.app.tl .dash{display:none}
+.lhelp{font-size:14px;line-height:1.45;margin:0 0 12px}
+.dh{display:block;font:700 19px var(--serif);margin:0 0 10px}
+.tiles{grid-template-columns:1fr 1fr;gap:8px}
+.st{padding:10px 12px;min-height:56px}
+.st .ic{width:30px;height:30px}
+.st b{font-size:22px}.st span{font-size:13px}
+.mrow{margin-top:12px}
+.mrow small,#unitsplit{font-size:13px}
+
+/* footer tools */
+.foot{order:8;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:stretch;margin-top:20px}
+.foot .btn{min-height:46px;white-space:normal;line-height:1.2;color:var(--ink)}
+.foot .keys{display:none}
+
+/* dialogs become bottom sheets */
+dialog{width:100%;max-width:none;margin:auto 0 0;border-radius:20px 20px 0 0;border-width:1px 0 0;padding:18px 16px calc(16px + env(safe-area-inset-bottom));max-height:90svh}
+dialog[open]{animation:sheet .22s ease-out}
+@keyframes sheet{from{transform:translateY(28px);opacity:0}to{transform:none;opacity:1}}
+dialog textarea{font-size:16px;min-height:140px}
+dialog .btn{min-height:44px}
+dialog .row>.row{margin-left:auto}
+}
+@media (max-width:360px){
+.top h1{font-size:20px}
+.sbar{font-size:10.5px}
+.sbar b{font-size:16px}
+.tools .btn{font-size:13px}
+.txt{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-sad" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="currentColor"/><circle cx="8.3" cy="9.6" r="1.5" fill="#fff"/><circle cx="15.7" cy="9.6" r="1.5" fill="#fff"/><path d="M7.4 17.2c1.3-2.7 7.9-2.7 9.2 0" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><path d="M18.3 11.8c.9 1.3 1.3 2 1.3 2.6a1.3 1.3 0 0 1-2.6 0c0-.6.4-1.3 1.3-2.6z" fill="#a9dcff"/></symbol>
+<symbol id="i-ok" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M6.8 12.4l3.6 3.6 6.9-7.4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-new" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M12 4.8l1.9 5.3 5.3 1.9-5.3 1.9L12 19.2l-1.9-5.3L4.8 12l5.3-1.9z" fill="#fff"/></symbol>
+<symbol id="i-learn" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M12 6.2V12l3.9 2.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</defs></svg>
+
+<div class="app">
+<header class="top">
+<div>
+<h1>ITIM05 flashcard trainer</h1>
+<p>Unit 4 Prediction and Unit 5 Part 1 Pattern Mining &middot; <span id="total"></span> cards</p>
+</div>
+<div class="row"><button class="btn" id="theme" type="button"></button></div>
+</header>
+
+<section class="modes" aria-label="Choose a mode">
+<button class="mode" data-m="1" type="button"><b>Mode 1<span class="c">: </span><span class="mm">description first</span></b><span>Front: description. Back: answer.</span></button>
+<button class="mode" data-m="2" type="button"><b>Mode 2<span class="c">: </span><span class="mm">answer first</span></b><span>Front: answer. Back: description.</span></button>
+</section>
+
+<section class="dash" aria-label="Your progress">
+<h2 class="dh">Your progress</h2>
+<div class="tiles" id="tiles"></div>
+<div class="mrow"><div class="bar" aria-hidden="true"><i id="mbar"></i></div><small id="mtext"></small></div>
+<small id="unitsplit" style="color:var(--mute);display:block;margin-top:4px"></small>
+</section>
+
+<div class="tabs" role="tablist">
+<button class="tab on" id="tabS" role="tab" type="button">Study</button>
+<button class="tab" id="tabL" role="tab" type="button">All cards</button>
+</div>
+
+<!-- STUDY -->
+<div id="pS">
+<details class="setup">
+<summary>Session setup</summary>
+<div class="sgrid">
+<label>Unit<span class="units" id="units"><button class="btn on" data-u="all" type="button">All</button><button class="btn" data-u="4" type="button">Unit 4</button><button class="btn" data-u="5" type="button">Unit 5</button></span></label>
+<label>Topic<select id="topic"></select></label>
+<label>Which cards<select id="set">
+<option value="notm">Not mastered yet</option>
+<option value="all">All cards</option>
+<option value="new">New only</option>
+<option value="wrong">Wrong earlier only</option>
+<option value="learning">Learning only</option>
+<option value="mastered">Mastered (review)</option></select></label>
+<label>Mastered after<select id="master"><option value="1">1 correct answer</option><option value="2">2 correct in a row</option><option value="3">3 correct in a row</option></select></label>
+<label class="chk"><input type="checkbox" id="shuffle"> Shuffle the deck</label>
+<label class="chk"><input type="checkbox" id="typedOpt"> Type my answer first (Mode 1)</label>
+<label class="chk"><input type="checkbox" id="noteFront"> Show my clues on the front of the card</label>
+<button class="btn pri" id="restart" type="button">Start a new session</button>
+</div>
+</details>
+
+<div class="sbar" id="sbar"></div>
+<div class="sprog" aria-hidden="true"><i id="sprog"></i></div>
+<div id="studyBody"></div>
+</div>
+
+<!-- LIST -->
+<div id="pL" hidden>
+<p class="lhelp" style="color:var(--mute);margin-top:0">Badges show your progress in the mode you picked above. Click Study to put a card at the front of your session.</p>
+<div class="lt">
+<input type="search" id="lsearch" placeholder="Search cards" aria-label="Search cards">
+<div class="chips"><button class="btn on" data-ls="all" type="button">All</button><button class="btn" data-ls="new" type="button">New</button><button class="btn" data-ls="wrong" type="button">Wrong earlier</button><button class="btn" data-ls="learning" type="button">Learning</button><button class="btn" data-ls="mastered" type="button">Mastered</button><button class="btn" data-ls="clue" type="button">With my clues</button></div>
+</div>
+<div id="llist"></div>
+</div>
+
+<div id="storewarn" class="warn" hidden>This browser is blocking storage, so progress will not be saved after you close the page. You can still copy your progress code below.</div>
+<div class="foot">
+<button class="btn" id="exp" type="button">Copy progress code</button>
+<button class="btn" id="imp" type="button">Restore progress code</button>
+<button class="btn" id="reset" type="button">Reset all progress</button>
+<button class="btn" id="clrnotes" type="button">Remove all my clues</button>
+<span class="keys">Keys: <kbd>Space</kbd> flip &nbsp; <kbd>1</kbd> right &nbsp; <kbd>2</kbd> wrong, middle &nbsp; <kbd>3</kbd> wrong, back &nbsp; <kbd>H</kbd> hint &nbsp; <kbd>N</kbd> my clue &nbsp; <kbd>S</kbd> skip &nbsp; <kbd>U</kbd> undo</span>
+</div>
+</div>
+
+<dialog id="ndlg"><form method="dialog" style="display:grid;gap:10px">
+<b id="ntitle" style="font:700 20px var(--serif)"></b>
+<p style="margin:0;color:var(--mute);font-size:14.5px">Write a clue only you understand: a memory trick, a Tagalog hint, a keyword. It shows on this card until you remove it.<span class="kh"> Press Ctrl+Enter to save.</span></p>
+<textarea id="nta" maxlength="400" spellcheck="false" placeholder="Example: Apriori = 1994, parang A-1 sa pila"></textarea>
+<small id="ncount" style="color:var(--mute)"></small>
+<div class="row" style="justify-content:space-between"><button class="btn" id="nrm" type="button">Remove clue</button><span class="row"><button class="btn" value="close">Cancel</button><button class="btn pri" id="nsave" type="button">Save clue</button></span></div>
+</form></dialog>
+<dialog id="dlg"><form method="dialog" style="display:grid;gap:10px">
+<b id="dtitle" style="font:700 20px var(--serif)"></b><p id="dmsg" style="margin:0;color:var(--mute);font-size:15px"></p>
+<textarea id="dta" spellcheck="false"></textarea>
+<div class="row" style="justify-content:flex-end"><button class="btn pri" id="dgo" value="x" type="button">Load</button><button class="btn" value="close">Close</button></div>
+</form></dialog>
+
+<script>
+/* ===================== DECK: [unit, topic, answer, description] ===================== */
+const DECK=[
+/* ---- Unit 4: Prediction basics ---- */
+[4,"Prediction basics","Prediction","A forecast of a future event or future data."],
+[4,"Prediction basics","Predictive analytics","Involves various statistical techniques to estimate or predict future outcomes."],
+/* ---- Unit 4: Prediction models ---- */
+[4,"Prediction models","Commonly used prediction models","Regression and decision trees."],
+[4,"Prediction models","Other models (besides regression and decision trees)","Neural networks and time series."],
+[4,"Prediction models","Neural networks","Deep learning technologies used for pattern recognition. Examples: adaptive learning, vision of self-driving cars."],
+[4,"Prediction models","Time series","Plots data sequentially; useful for forecasting continuous data over time. Examples: average closing of stock prices, daily average of gasoline prices."],
+[4,"Prediction models","Other classifiers","Clustering algorithms, outlier detection, ensemble models, factor analysis, Naive Bayes, and support vector machines."],
+/* ---- Unit 4: Linear regression ---- */
+[4,"Linear regression","Regression","Estimates relationships among variables and finds patterns in the dataset."],
+[4,"Linear regression","Linear regression","A technique that uses linear relationships between a dependent variable (target) and one or more independent variables (predictors) to predict the future of the target."],
+[4,"Linear regression","IBM (2023)","The source cited on the slide for the definition of linear regression."],
+[4,"Linear regression","Dependent variable (target)","The variable being predicted (Y). In the sample, the predicted score."],
+[4,"Linear regression","Independent variable (predictor)","The variable used to predict the target (X). In the sample, the hours of practice."],
+[4,"Linear regression","Uses of linear regression","Trend evaluation, providing estimates, analyze pricing, risk and claims, and sports analysis."],
+[4,"Linear regression","y = mX + b","The prediction formula: Y is the dependent variable (predicted score), X is the independent variable (hours), m is the estimated slope, and b is the estimated intercept."],
+[4,"Linear regression","Regression coefficient (slope, m)","Tells how much Y changes when X changes."],
+[4,"Linear regression","Intercept (b)","The expected value of Y if X is 0."],
+[4,"Linear regression","Coefficient of determination (R²)","The ability of the model to predict an outcome; shows the percentage of variability between the values. Ranges from 0 to 1, where 1 is 100%."],
+/* ---- Unit 4: Python sample ---- */
+[4,"Python sample","samplegrades.csv","The sample dataset loaded with pd.read_csv: 10 entries with the columns hours and score."],
+[4,"Python sample","Libraries in the linear regression sample","pandas as pd, numpy as np, matplotlib.pyplot as plt, seaborn as sns, and LinearRegression from sklearn.linear_model."],
+[4,"Python sample","df.head()","Shows the first rows of the dataset. In the sample: (hours, score) = (2, 60), (10, 99), (9, 92), (8, 93), (3, 70)."],
+[4,"Python sample","df.info()","Shows the entries, columns, non-null counts and data types. In the sample: 10 entries, 2 columns, 10 non-null each, int64, memory 288.0 bytes."],
+[4,"Python sample","df.describe()","Shows count, mean, std, min, quartiles and max. In the sample: mean hours 5.8 and mean score 79.5."],
+[4,"Python sample","sns.histplot(df['score'])","Shows the distribution of the data: the Score Distribution histogram."],
+[4,"Python sample","plt.scatter(df['hours'], df['score'])","Plots the relationship between hours spent practicing and scores achieved; the points rise as hours increase."],
+[4,"Python sample","iloc","Stands for integer location; usually used to select specific rows and columns in a dataset."],
+[4,"Python sample","df.iloc[:, :1]","Returns data from the first column (hours). Used as X, the independent variable."],
+[4,"Python sample","df.iloc[:, 1:]","Selects all rows and the columns starting from the second column (score). Used as y, the dependent variable."],
+[4,"Python sample","LinearRegression()","The sklearn.linear_model class used to create the model in the sample."],
+[4,"Python sample","model.fit(X, y)","Trains the linear regression model with the independent (X) and dependent (y) variables."],
+[4,"Python sample","model.coef_","Returns the regression coefficient (slope) of the model: array([[4.66480447]])."],
+[4,"Python sample","model.intercept_","Returns the estimated intercept of the model: array([52.44413408])."],
+[4,"Python sample","model.score(X, y)","Returns the coefficient of determination: 0.9462767644928213 in the sample."],
+[4,"Python sample","4.66480447","The slope (regression coefficient) in the hours vs. score sample: each extra hour adds about 4.66 points to the predicted score."],
+[4,"Python sample","52.44413408","The intercept in the sample: the expected score with 0 hours of practice."],
+[4,"Python sample","0.946 (94.6%)","The coefficient of determination in the sample: 94.6% of the variability of the scores can be explained by the hours of practice."],
+[4,"Python sample","94.43","The predicted score for 9 hours of practice: 4.66480447 × 9 + 52.44413408."],
+/* ---- Unit 4: Decision trees and random forest ---- */
+[4,"Decision trees and random forest","Decision tree","Commonly used for multiple variable analysis. The algorithm finds a way to split data into branches based on variables, which helps you understand decision paths."],
+[4,"Decision trees and random forest","RandomTree and J48","The two decision tree algorithm examples named on the slides."],
+[4,"Decision trees and random forest","Uses of decision trees","Fraud detection, risk assessment, medical diagnosis, marketing, understanding behavior and decisions, and classification and prediction."],
+[4,"Decision trees and random forest","Random forest","Consists of numerous trees and aggregates the output results of the trees to make one output."],
+[4,"Decision trees and random forest","weather_nominal.arff","The sample dataset loaded in WEKA for the decision tree and random forest examples."],
+[4,"Decision trees and random forest","WEKA steps for the decision tree sample","Load the dataset, go to Classify, choose Random Tree, click Start, then read the Classifier Output on the right-hand side of the screen."],
+[4,"Decision trees and random forest","Visualize Tree","The WEKA option for the Tree View: go to the Results List, right-click the result, then choose this."],
+[4,"Decision trees and random forest","WEKA steps for the random forest sample","Load the dataset, go to Classify, choose Random Forest, click on it to open the options, set printClassifiers to True, then click Start."],
+[4,"Decision trees and random forest","printClassifiers","The Random Forest option set to True so the numerous trees show in the Classifier Output window (you might need to scroll up)."],
+[4,"Decision trees and random forest","J48 pruned tree","The heading of the sample decision tree output in WEKA."],
+[4,"Decision trees and random forest","outlook","The root attribute of the sample decision tree; it splits into sunny, overcast and rainy."],
+[4,"Decision trees and random forest","5 leaves, tree size 8","The Number of Leaves and the Size of the tree in the sample decision tree output."],
+[4,"Decision trees and random forest","outlook = sunny branch","Splits on humidity: high = no (3.0), normal = yes (2.0)."],
+[4,"Decision trees and random forest","outlook = overcast branch","Leads straight to a leaf: yes (4.0)."],
+[4,"Decision trees and random forest","outlook = rainy branch","Splits on windy: TRUE = no (2.0), FALSE = yes (3.0)."],
+[4,"Decision trees and random forest","RandomTree blocks in the forest output","The individual trees printed for the random forest sample; each shows size of tree 8 and splits first on humidity (normal = yes)."],
+/* ---- Unit 4: Classification metrics ---- */
+[4,"Classification metrics","True positive (TP)","Positive events correctly classified as positive."],
+[4,"Classification metrics","False positive (FP)","Negative events incorrectly classified as positive."],
+[4,"Classification metrics","True negative (TN)","Negative events correctly classified as negative."],
+[4,"Classification metrics","False negative (FN)","Positive events incorrectly classified as negative."],
+[4,"Classification metrics","Confusion matrix","A tool to show the mapping of actual and predicted values."],
+[4,"Classification metrics","Confusion matrix layout on the slide","Top row: True Positive, False Positive. Bottom row: False Negative, True Negative."],
+[4,"Classification metrics","WEKA matrix 59, 2 / 27, 12","The example: 59 instances classified correctly as 0 (a), 2 instances of a classified as b, 27 instances of b classified as a, and 12 classified correctly."],
+[4,"Classification metrics","Accuracy","Shows the proportion of correct classifications, whether they are positive or negative. A perfect model would be 100%."],
+[4,"Classification metrics","Recall (true positive rate)","The proportion of actual positives that are classified correctly. Perfect would be 1.0."],
+[4,"Classification metrics","False positive rate","The proportion of actual negatives incorrectly classified. A perfect model would have 0."],
+[4,"Classification metrics","Precision","The proportion of positive classifications that are really positives. A perfect model would have 1.0."],
+[4,"Classification metrics","F-score (F-measure)","Combination of precision and recall: 2 * Precision * Recall / (Precision + Recall). Useful for imbalanced classification (for example, more positives than negatives). A higher score means the model performs well; usually above 0.5 but it depends on the use."],
+[4,"Classification metrics","ROC area","Receiver Operating Characteristics; shows the classifier's ability to distinguish events. Values of 0.8 to 0.9 are good and great; lower may denote random guessing."],
+[4,"Classification metrics","The six classification metrics","Accuracy, recall (true positive rate), false positive rate, precision, F-measure (F-score), and ROC area."],
+/* ---- Unit 4: WEKA results ---- */
+[4,"WEKA results","8 correct (57.1429%)","Correctly classified instances in the decision tree sample (14 instances, stratified cross-validation); 6 were incorrect (42.8571%)."],
+[4,"WEKA results","10 correct (71.4286%)","Correctly classified instances in the random forest sample (14 instances); 4 were incorrect (28.5714%)."],
+[4,"WEKA results","ROC 0.500 and F-measure 0.571","The decision tree sample's ROC area and weighted-average F-measure."],
+[4,"WEKA results","ROC 0.533 and F-measure 0.693","The random forest sample's ROC area and weighted-average F-measure."],
+[4,"WEKA results","Random forest vs. decision tree result","The random forest performed better: 71.43% vs. 57.14% correct, and a weighted F-measure of 0.693 vs. 0.571."],
+[4,"WEKA results","ROC area near 0.5","A value like the samples' 0.500 and 0.533, far below the good 0.8 to 0.9 range, which suggests random guessing."],
+/* ---- Unit 5: Pattern mining and Apriori ---- */
+[5,"Pattern mining and Apriori","Data mining (knowledge discovery in databases)","In computer science, the process of discovering interesting and useful patterns and relationships in large volumes of data."],
+[5,"Pattern mining and Apriori","Christopher Clifton (Britannica)","The source cited on the slide for the definition of data mining."],
+[5,"Pattern mining and Apriori","Pattern mining","Concentrates on identifying rules that describe specific patterns within the data."],
+[5,"Pattern mining and Apriori","Market basket analysis","The most popular implementation of pattern mining; identifies the items that frequently occur together in transactions."],
+[5,"Pattern mining and Apriori","Apriori algorithm","An algorithm for finding frequent itemsets in a dataset for boolean association rule."],
+[5,"Pattern mining and Apriori","R. Agrawal and R. Srikant (1994)","They proposed the Apriori algorithm."],
+[5,"Pattern mining and Apriori","Layer-by-layer searching","How Apriori gets frequent itemsets; the frequency is evaluated based on the Apriori property."],
+[5,"Pattern mining and Apriori","Zhao et al. (2021)","The source cited on the slide for how Apriori works (layer-by-layer searching)."],
+[5,"Pattern mining and Apriori","Apriori property","All non-empty subsets of a frequent itemset must be frequent."],
+[5,"Pattern mining and Apriori","Frequent itemset","An itemset that appears frequently in the transactions (judged by support); Apriori derives its rules from these."],
+[5,"Pattern mining and Apriori","Association rule","A rule that expresses a probabilistic relationship between items in frequent itemsets."],
+[5,"Pattern mining and Apriori","Example rule: if A and B, then C","A rule from frequent itemsets with A, B and C stating that if A and B are in a transaction, then C is likely to also be included."],
+[5,"Pattern mining and Apriori","Antecedent","The If part of an association rule."],
+[5,"Pattern mining and Apriori","Consequent (consequence)","The Then part of an association rule."],
+/* ---- Unit 5: Support, confidence, lift ---- */
+[5,"Support, confidence, lift","The three main association rule metrics","Support, confidence, and lift. Conviction is the additional metric on the slides."],
+[5,"Support, confidence, lift","The 5 transactions in the example","1: Apple, Milk, Banana. 2: Apple, Milk. 3: Apple, Milk. 4: Apple, Banana. 5: Milk, Banana."],
+[5,"Support, confidence, lift","Support","How frequently the items in the rule occur together; how popular or frequent an itemset is, based on the proportion of the transactions in which it appears."],
+[5,"Support, confidence, lift","Support {Apple} = 0.8 (80%)","Apple is in 4 of the 5 transactions (transactions 1 to 4)."],
+[5,"Support, confidence, lift","Support {Banana} = 0.6","Banana is in 3 of the 5 transactions (1, 4 and 5); used in the lift calculation."],
+[5,"Support, confidence, lift","Support {Apple, Banana} = 0.4","Both items are in transactions 1 and 4, so 2 of the 5 transactions."],
+[5,"Support, confidence, lift","Confidence","How likely B occurs when A occurs. The overview slide words it as the probability of both A and B appearing in the same transaction."],
+[5,"Support, confidence, lift","Support {A, B} / Support {A}","The formula for confidence {A → B}."],
+[5,"Support, confidence, lift","Confidence {Apple → Banana} = 0.5 (50%)","Computed as Support {Apple, Banana} / Support {Apple} = 0.4 / 0.8."],
+[5,"Support, confidence, lift","Lift","The strength of a rule over the random co-occurrence of A and B, given their individual support; it takes the popularity of both items into account."],
+[5,"Support, confidence, lift","Support {A, B} / (Support {A} × Support {B})","The formula for lift {A → B}."],
+[5,"Support, confidence, lift","Lift {Apple → Banana} = 0.8333","Computed as 0.4 / (0.8 × 0.6). It is below 1, so the items are unlikely to be bought together."],
+[5,"Support, confidence, lift","Lift = 1","No association."],
+[5,"Support, confidence, lift","Lift < 1","Unlikely: the itemset is less likely to occur together."],
+[5,"Support, confidence, lift","Lift > 1","Likely: a significant association; the itemset can frequently occur together."],
+[5,"Support, confidence, lift","Conviction","Tells the dependency between X and Y."],
+[5,"Support, confidence, lift","(1 − Support (Y)) / (1 − Confidence (X ⇒ Y))","The formula for conviction."],
+[5,"Support, confidence, lift","Conviction = 1","X has no relation with Y."],
+[5,"Support, confidence, lift","High conviction value","The consequent is highly dependent on the antecedent."],
+[5,"Support, confidence, lift","Patel (2023)","The source cited on the slide for conviction (Medium: Association Rule Mining | Apriori Algorithm)."],
+/* ---- Unit 5: Sample research output ---- */
+[5,"Sample research output","Best rules found","The heading of the WEKA Apriori output that lists the top rules in the sample research application."],
+[5,"Sample research output","Confidence vs. lift in the research output","Confidence shows how often items in Y appear in transactions or instances with X; lift (lift ratio) is the increased confidence in having Y happen when X does."],
+[5,"Sample research output","Ng (2016)","The source cited on the slide for interpreting lift values."],
+[5,"Sample research output","cc101=1.75 ⇒ desc=ontrack","Rule 1 of the sample output: the strongest rule, with confidence 1, lift 1.05 and conviction 5.02."],
+[5,"Sample research output","Rules 1 to 4 (lift above 1)","cc101=1.75, gender=Female, shs_type=Private, and gender=Male + shs_type=Private: lift 1.05 to 1.01, so likely together with desc=ontrack."],
+[5,"Sample research output","strand=Voctech ⇒ desc=ontrack","Rule 5 of the sample output: a lift of exactly 1, so no association."],
+[5,"Sample research output","Rules 6 to 10 (lift below 1)","Lift 0.99 to 0.95, so less likely to occur together with desc=ontrack; they include the shs_type=Public and gender=Male rules."],
+/* ---- Unit 5: Apriori in WEKA and Python ---- */
+[5,"Apriori in WEKA and Python","Apriori in WEKA","Load data, go to the Associate tab, choose Apriori, then click Start. The best rules found appear in the output window."],
+[5,"Apriori in WEKA and Python","Apriori -N 10 -T 0 -C 0.9 -D 0.05 -U 1.0 -M 0.1 -S -1.0 -c -1","The default Apriori options shown in the Choose box of the Associate tab on the slide."],
+[5,"Apriori in WEKA and Python","pycaret","The Python library to install for association rules."],
+[5,"Apriori in WEKA and Python","If → Then","The terms for the two sides of a rule: Antecedent → Consequence."]
+];
+const CARDS=DECK.map((r,i)=>({id:i,u:r[0],t:r[1],a:r[2],d:r[3]}));
+const TOPICS=[...new Set(CARDS.map(c=>c.t))];
+
+/* ===================== STATE ===================== */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const LS='itim05_u45_flashcards_v1';
+let S={mode:1,unit:'all',topic:'all',set:'notm',shuffle:true,master:2,typed:false,noteFront:true,theme:null,prog:{},notes:{}};
+let storeOK=true;
+try{const j=JSON.parse(localStorage.getItem(LS)||'null');if(j&&typeof j==='object')S=Object.assign(S,j)}catch(e){storeOK=false}
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){storeOK=false;$('#storewarn').hidden=false}}
+const key=(id,m=S.mode)=>id+':'+m;
+const P=(id,m=S.mode)=>S.prog[key(id,m)]||{a:0,w:0,s:0};
+function st(c,m=S.mode){const p=P(c.id,m);if(p.s>=S.master)return'mastered';if(p.w>0)return'wrong';if(p.a>0)return'learning';return'new'}
+const ICON={new:'i-new',wrong:'i-sad',learning:'i-learn',mastered:'i-ok'};
+const LABEL={new:'New',wrong:'Wrong earlier',learning:'Learning',mastered:'Mastered'};
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+let Q=null;
+let SV=0;
+function freshQ(ids){return{ver:(++SV)*1000,queue:ids,total:ids.length,right:0,wrong:0,run:0,best:0,mastered:0,missed:new Set(),flipped:false,hint:false,fb:'',cmp:'',undo:[],tab:Q?Q.tab:'study'}}
+const match=(c,set)=>{const s=st(c);return set==='all'||(set==='notm'&&s!=='mastered')||set===s};
+const pool=()=>CARDS.filter(c=>(S.unit==='all'||c.u==S.unit)&&(S.topic==='all'||c.t===S.topic)&&match(c,S.set));
+function start(ids){let q=ids||pool().map(c=>c.id);if(S.shuffle)shuffle(q);Q=freshQ(q);render()}
+
+/* ===================== BADGES ===================== */
+function badge(c){
+  const s=st(c),p=P(c.id);let t=LABEL[s];
+  if(s==='wrong'){t+=` · missed ${p.w}×`;if(p.s>0)t+=` · back on track ${p.s}/${S.master}`}
+  else if(s==='learning')t+=` ${p.s}/${S.master}`;
+  else if(s==='mastered'&&p.w>0)t+=` · missed ${p.w}× before`;
+  return `<span class="bdg ${s}"><svg><use href="#${ICON[s]}"/></svg><span>${esc(t)}</span></span>`;
+}
+const NT=id=>(S.notes&&S.notes[id])||'';
+const noteHTML=(c,side)=>{const t=NT(c.id);return t&&(side==='b'||S.noteFront)?`<span class="note"><b>My clue</b>${esc(t)}</span>`:''};
+const corner=c=>st(c)==='wrong'?`<span class="corner" title="You got this one wrong earlier"><svg><use href="#i-sad"/></svg></span>`:'';
+
+/* ===================== RENDER ===================== */
+function counts(m=S.mode){const c={new:0,wrong:0,learning:0,mastered:0};CARDS.forEach(x=>c[st(x,m)]++);return c}
+function renderDash(){
+  const c=counts(),n=CARDS.length;
+  $('#tiles').innerHTML=['new','wrong','learning','mastered'].map(k=>`<button class="st ${k}${S.set===k?' sel':''}" data-set="${k}" type="button" title="Study only these cards"><svg class="ic"><use href="#${ICON[k]}"/></svg><b>${c[k]}</b><span>${LABEL[k]}</span></button>`).join('');
+  $('#mbar').style.width=(c.mastered/n*100)+'%';
+  $('#mtext').textContent=`${c.mastered} of ${n} mastered in Mode ${S.mode} (${Math.round(c.mastered/n*100)}%). Mode 1 and Mode 2 are tracked separately.`;
+  const u=k=>{const l=CARDS.filter(x=>x.u==k);return `Unit ${k}: ${l.filter(x=>st(x)==='mastered').length}/${l.length} mastered`};
+  $('#unitsplit').textContent=u(4)+'  |  '+u(5);
+  $$('.mode').forEach(b=>{const on=b.dataset.m==S.mode;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+}
+function faceHTML(c,side){
+  const m=S.mode,term=(m===1&&side==='b')||(m===2&&side==='f');
+  const body=term?`<div class="lab">Answer</div><div class="term">${esc(c.a)}</div>`:`<div class="lab">Description</div><div class="txt">${esc(c.d)}</div>`;
+  const ft=side==='f'?'<span class="lg">Click the card or press Space to flip</span><span class="sm">Tap the card to flip</span>':'Now rate yourself below';
+  return `<span class="hd">${badge(c)}${corner(c)}</span><span class="meta">Unit ${c.u} · ${esc(c.t)}</span><span class="mid">${body}</span>${noteHTML(c,side)}<span class="ft">${ft}</span>`;
+}
+function hintText(c){
+  if(S.mode===1){const w=c.a.split(/\s+/).length;return `Starts with "${c.a[0]}" · ${w} word${w>1?'s':''} · ${c.a.length} characters`}
+  return 'Starts like this: '+c.d.split(/\s+/).slice(0,5).join(' ')+' …';
+}
+const cardHTML=(c,on,pop)=>`<button class="card u${c.u}${on?' on':''}${pop?'':' nopop'}" id="card" type="button" aria-label="Flashcard. Click to flip."><span class="in"><span class="fr">${faceHTML(c,'f')}</span><span class="bk">${faceHTML(c,'b')}</span></span></button>`;
+function renderStudy(){
+  const q=Q.queue,done=Q.total-q.length;
+  $('#sbar').innerHTML=`<span><b>${q.length}</b> left</span><span><b>${Q.right}</b> right</span><span><b>${Q.wrong}</b> wrong</span><span>Streak <b>${Q.run}</b></span><span>Mastered<span class="lg"> this session</span> <b>${Q.mastered}</b></span>`;
+  $('#sprog').style.width=(Q.total?done/Q.total*100:0)+'%';
+  const B=$('#studyBody');
+  if(!Q.total){B.innerHTML=`<div class="done"><h2>No cards match</h2><p>Nothing fits these settings right now. Try "All cards" or reset the topic.</p><div class="row"><button class="btn pri" data-act="all" type="button">Study all cards</button></div></div>`;return}
+  if(!q.length){
+    const miss=[...Q.missed].map(i=>CARDS[i]);
+    const acc=Q.right+Q.wrong?Math.round(Q.right/(Q.right+Q.wrong)*100):0;
+    B.innerHTML=`<div class="done"><h2>Session complete</h2><p>${Q.right} right, ${Q.wrong} wrong (${acc}% accuracy). Best streak ${Q.best}. ${Q.mastered} card${Q.mastered===1?'':'s'} mastered.</p>${miss.length?`<p style="margin-bottom:0">Cards you missed this session:</p><ul>${miss.map(c=>`<li><svg><use href="#i-sad"/></svg><span>${esc(c.a)}</span></li>`).join('')}</ul>`:'<p>You did not miss a single card this session.</p>'}<div class="row">${miss.length?`<button class="btn pri" data-act="missed" type="button">Practice the missed cards</button>`:''}<button class="btn" data-act="again" type="button">Start again with the same settings</button><button class="btn" data-act="all" type="button">Study all cards</button></div></div>`;
+    return;
+  }
+  const c=CARDS[q[0]];
+  if(!$('#stage')){B.innerHTML='<div class="stage" id="stage"></div><div class="actions" id="acts"></div>'}
+  const stage=$('#stage'),sk=c.id+':'+Q.ver;
+  if(stage.dataset.k!==sk){
+    stage.dataset.k=sk;
+    stage.innerHTML=cardHTML(c,Q.flipped,true);
+    if(stage.getBoundingClientRect().top<0)stage.scrollIntoView({block:'start'});
+  }else{const cd=$('#card');if(cd)cd.classList.toggle('on',Q.flipped)}
+  const typedBox=S.typed&&S.mode===1&&!Q.flipped?`<div class="typed"><input id="typed" type="text" placeholder="Type the answer, then press Enter" autocomplete="off" aria-label="Type your answer"><button class="btn" data-act="flip" type="button">Check</button></div>`:'';
+  $('#acts').innerHTML=`<div class="dock">${typedBox}
+    <div class="cmp ${Q.cmpc||''}" id="cmp">${Q.flipped?esc(Q.cmp):''}</div>
+    ${Q.flipped?`<div class="grade">
+      <button class="g ok" data-g="ok" type="button"><b>I got it right</b><span class="kh">Press <kbd>1</kbd></span></button>
+      <button class="g bad" data-g="mid" type="button"><b>Wrong: <span class="lg">put it in the </span>middle</b><span>It returns in a few cards.<span class="kh"> Press <kbd>2</kbd></span></span></button>
+      <button class="g bad" data-g="back" type="button"><b>Wrong: <span class="lg">put it at the </span>back</b><span>It returns after the rest.<span class="kh"> Press <kbd>3</kbd></span></span></button></div>`
+    :`<button class="btn pri show" data-act="flip" type="button">Show the ${S.mode===1?'answer':'description'}</button>`}</div>
+    <div class="row tools"><button class="btn" data-act="hint" type="button">Hint <kbd>H</kbd></button><button class="btn" data-act="note" type="button"><span class="lg">${NT(c.id)?'Edit my clue':'Add my clue'}</span><span class="sm">${NT(c.id)?'Edit clue':'Add clue'}</span> <kbd>N</kbd></button><button class="btn" data-act="skip" type="button">Skip <kbd>S</kbd></button><button class="btn" data-act="undo" type="button" ${Q.undo.length?'':'disabled'}>Undo <kbd>U</kbd></button></div>
+    <div class="hint" id="hint">${Q.hint&&!Q.flipped?esc(hintText(c)):''}</div>
+    <div class="fb" id="fb" role="status" aria-live="polite">${esc(Q.fb)}</div>`;
+  const ti=$('#typed');if(ti)ti.focus();
+}
+function renderList(){
+  const f=$('.lt .btn.on').dataset.ls,qs=$('#lsearch').value.trim().toLowerCase();
+  const rows=CARDS.filter(c=>(f==='all'||(f==='clue'?!!NT(c.id):st(c)===f))&&(!qs||(c.a+' '+c.d+' '+c.t+' '+NT(c.id)).toLowerCase().includes(qs)));
+  $('#llist').innerHTML=rows.length?rows.map(c=>{const p=P(c.id);return `<div class="lrow u${c.u}"><span class="b">${badge(c)}</span><span class="a">${esc(c.a)}</span><span class="go"><button class="btn" data-id="${c.id}" type="button">Study</button><button class="btn" data-nid="${c.id}" type="button">${NT(c.id)?'Edit clue':'Add clue'}</button></span><span class="d">${esc(c.d)}</span>${NT(c.id)?`<span class="note"><b>My clue</b>${esc(NT(c.id))}</span>`:''}<span class="s">Unit ${c.u} · ${esc(c.t)} · tried ${p.a}× · missed ${p.w}×</span></div>`}).join(''):'<p style="color:var(--mute)">No cards here.</p>';
+}
+function render(){renderDash();renderStudy();if(Q.tab==='list')renderList()}
+function syncControls(){
+  $$('#units .btn').forEach(b=>b.classList.toggle('on',b.dataset.u==S.unit));
+  $('#topic').value=S.topic;$('#set').value=S.set;$('#master').value=S.master;$('#shuffle').checked=S.shuffle;$('#typedOpt').checked=S.typed;$('#noteFront').checked=S.noteFront;
+}
+
+/* ===================== ACTIONS ===================== */
+function flip(){
+  if(!Q||!Q.queue.length)return;
+  if(Q.flipped){Q.flipped=false;renderStudy();return}
+  const c=CARDS[Q.queue[0]],ti=$('#typed');Q.cmp='';Q.cmpc='';
+  if(ti&&ti.value.trim()){
+    const n=x=>x.toLowerCase().replace(/[^a-z0-9]+/g,''),a=n(c.a),b=n(ti.value);
+    if(a===b){Q.cmp=`You typed "${ti.value.trim()}": that matches the answer.`;Q.cmpc='good'}
+    else if(b.length>3&&(a.includes(b)||b.includes(a))){Q.cmp=`You typed "${ti.value.trim()}": close. Compare it with the answer.`;Q.cmpc='mid'}
+    else{Q.cmp=`You typed "${ti.value.trim()}": it does not match. Check the answer.`;Q.cmpc='no'}
+  }
+  Q.flipped=true;Q.fb='';renderStudy();
+}
+function snapshot(k){return{queue:Q.queue.slice(),k,old:S.prog[k]?JSON.stringify(S.prog[k]):null,right:Q.right,wrong:Q.wrong,run:Q.run,best:Q.best,mastered:Q.mastered,missed:[...Q.missed]}}
+function grade(kind){
+  if(!Q||!Q.flipped||!Q.queue.length)return;
+  const id=Q.queue[0],k=key(id);
+  Q.undo.push(snapshot(k));if(Q.undo.length>40)Q.undo.shift();
+  const p=Object.assign({},P(id));p.a++;Q.queue.shift();
+  const before=st(CARDS[id]);
+  if(kind==='ok'){
+    p.s++;Q.right++;Q.run++;Q.best=Math.max(Q.best,Q.run);
+    if(p.s>=S.master){Q.mastered++;Q.fb=before==='wrong'?'Back on track. This card is now mastered.':'Mastered.'}
+    else{Q.queue.push(id);Q.fb=`Correct ${p.s}/${S.master}. It comes back at the end of the deck to confirm.`}
+  }else{
+    p.w++;p.s=0;Q.wrong++;Q.run=0;Q.missed.add(id);
+    if(kind==='mid'){Q.queue.splice(Math.floor(Q.queue.length/2),0,id);Q.fb='Wrong. Put in the middle of the deck.'}
+    else{Q.queue.push(id);Q.fb='Wrong. Put at the back of the deck.'}
+  }
+  S.prog[k]=p;save();Q.ver++;Q.flipped=false;Q.hint=false;Q.cmp='';render();
+}
+function undo(){
+  if(!Q||!Q.undo.length)return;
+  const u=Q.undo.pop();
+  Q.queue=u.queue;if(u.old===null)delete S.prog[u.k];else S.prog[u.k]=JSON.parse(u.old);
+  Q.right=u.right;Q.wrong=u.wrong;Q.run=u.run;Q.best=u.best;Q.mastered=u.mastered;Q.missed=new Set(u.missed);
+  Q.ver++;Q.flipped=false;Q.hint=false;Q.cmp='';Q.fb='Last answer undone.';save();render();
+}
+function skip(){if(Q&&Q.queue.length>1){Q.queue.push(Q.queue.shift());Q.ver++;Q.flipped=false;Q.hint=false;Q.cmp='';Q.fb='Skipped to the back. Nothing was recorded.';renderStudy()}}
+function studyNow(id){
+  Q.queue=Q.queue.filter(x=>x!==id);Q.queue.unshift(id);Q.total=Math.max(Q.total,Q.queue.length);
+  Q.ver++;Q.flipped=false;Q.hint=false;Q.cmp='';setTab('study');render();
+}
+function setTab(t){
+  Q.tab=t;document.querySelector('.app').classList.toggle('tl',t==='list');$('#pS').hidden=t!=='study';$('#pL').hidden=t!=='list';
+  $('#tabS').classList.toggle('on',t==='study');$('#tabL').classList.toggle('on',t==='list');
+  if(t==='list')renderList();
+}
+
+/* ===================== MY CLUES ===================== */
+let nid=null;
+const ncount=()=>{$('#ncount').textContent=$('#nta').value.length+' / 400 characters'};
+function openNote(id){
+  nid=id;const c=CARDS[id];
+  $('#ntitle').textContent='My clue for: '+c.a;$('#nta').value=NT(id);$('#nrm').hidden=!NT(id);ncount();
+  $('#ndlg').showModal();$('#nta').focus();
+}
+function refreshNotes(){
+  if(Q&&Q.queue.length&&$('#stage')){const c=CARDS[Q.queue[0]];$('#stage').innerHTML=cardHTML(c,Q.flipped,false);renderStudy()}
+  if(Q&&Q.tab==='list')renderList();
+}
+function setNote(id,t){t=(t||'').trim();if(!S.notes)S.notes={};if(t)S.notes[id]=t;else delete S.notes[id];save();refreshNotes()}
+$('#nta').addEventListener('input',ncount);
+$('#nta').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();$('#nsave').click()}});
+$('#nsave').onclick=()=>{setNote(nid,$('#nta').value);$('#ndlg').close()};
+$('#nrm').onclick=()=>{setNote(nid,'');$('#ndlg').close()};
+$('#noteFront').onchange=e=>{S.noteFront=e.target.checked;save();refreshNotes()};
+$('#clrnotes').onclick=()=>{const n=Object.keys(S.notes||{}).length;if(!n){alert('You have no clues yet.');return}if(confirm('Remove all '+n+' of your clues from every card? Your progress is kept.')){S.notes={};save();refreshNotes()}};
+
+/* ===================== EVENTS ===================== */
+$('#total').textContent=CARDS.length;
+$('#topic').innerHTML='<option value="all">All topics</option>'+TOPICS.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
+$$('.mode').forEach(b=>b.onclick=()=>{S.mode=+b.dataset.m;save();start()});
+$$('#units .btn').forEach(b=>b.onclick=()=>{S.unit=b.dataset.u;save();syncControls();start()});
+$('#topic').onchange=e=>{S.topic=e.target.value;save();start()};
+$('#set').onchange=e=>{S.set=e.target.value;save();start()};
+$('#master').onchange=e=>{S.master=+e.target.value;save();render()};
+$('#shuffle').onchange=e=>{S.shuffle=e.target.checked;save()};
+$('#typedOpt').onchange=e=>{S.typed=e.target.checked;save();renderStudy()};
+$('#restart').onclick=()=>start();
+$('#tiles').addEventListener('click',e=>{const b=e.target.closest('.st');if(!b)return;S.set=b.dataset.set;save();syncControls();setTab('study');start()});
+$('#tabS').onclick=()=>setTab('study');$('#tabL').onclick=()=>setTab('list');
+$('#studyBody').addEventListener('click',e=>{
+  if(e.target.closest('#card')){flip();return}
+  const g=e.target.closest('[data-g]');if(g){grade(g.dataset.g);return}
+  const a=e.target.closest('[data-act]');if(!a)return;
+  const k=a.dataset.act;
+  if(k==='flip')flip();
+  else if(k==='hint'){Q.hint=!Q.hint;renderStudy()}
+  else if(k==='note')openNote(Q.queue[0]);
+  else if(k==='skip')skip();
+  else if(k==='undo')undo();
+  else if(k==='again')start();
+  else if(k==='missed')start([...Q.missed]);
+  else if(k==='all'){S.set='all';S.topic='all';S.unit='all';save();syncControls();start()}
+});
+$('#studyBody').addEventListener('keydown',e=>{if(e.target.id==='typed'&&e.key==='Enter'){e.preventDefault();flip()}});
+$('#llist').addEventListener('click',e=>{const n=e.target.closest('[data-nid]');if(n){openNote(+n.dataset.nid);return}const b=e.target.closest('[data-id]');if(b)studyNow(+b.dataset.id)});
+$$('.lt [data-ls]').forEach(b=>b.onclick=()=>{$$('.lt [data-ls]').forEach(x=>x.classList.toggle('on',x===b));renderList()});
+$('#lsearch').oninput=renderList;
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'))return;
+  if(!Q||Q.tab!=='study'||document.querySelector('dialog[open]'))return;
+  const k=e.key.toLowerCase();
+  if((k===' '||k==='enter')&&!(t&&t.tagName==='BUTTON')){e.preventDefault();flip()}
+  else if(k==='1')grade('ok');else if(k==='2')grade('mid');else if(k==='3')grade('back');
+  else if(k==='h'&&!Q.flipped){Q.hint=!Q.hint;renderStudy()}
+  else if(k==='s')skip();else if(k==='u')undo();
+  else if(k==='n'&&Q.queue.length){e.preventDefault();openNote(Q.queue[0])}
+});
+
+/* theme */
+(function(){
+  const r=document.documentElement,b=$('#theme');
+  if(S.theme)r.dataset.theme=S.theme;
+  const dark=()=>r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;
+  const lab=()=>{b.textContent=dark()?'Light mode':'Dark mode';const m=document.querySelector('meta[name=theme-color]');if(m)m.content=dark()?'#0b0e1a':'#f4f5fa'};
+  b.onclick=()=>{r.dataset.theme=dark()?'light':'dark';S.theme=r.dataset.theme;save();lab()};lab();
+})();
+
+/* progress code, reset */
+const dlg=$('#dlg');let dmode='';
+function openDlg(mode){
+  dmode=mode;const ta=$('#dta');
+  if(mode==='exp'){$('#dtitle').textContent='Your progress code';$('#dmsg').textContent='Copy this text and keep it. It holds your progress and your clues. Use Restore on another browser or device to load it.';ta.value=btoa(unescape(encodeURIComponent(JSON.stringify({v:2,prog:S.prog,master:S.master,notes:S.notes||{}}))));ta.readOnly=true;$('#dgo').hidden=true}
+  else{$('#dtitle').textContent='Restore progress';$('#dmsg').textContent='Paste a progress code here. It replaces the progress and clues in this browser.';ta.value='';ta.readOnly=false;$('#dgo').hidden=false}
+  dlg.showModal();ta.focus();if(mode==='exp')ta.select();
+}
+$('#exp').onclick=()=>openDlg('exp');$('#imp').onclick=()=>openDlg('imp');
+$('#dgo').onclick=()=>{
+  try{const j=JSON.parse(decodeURIComponent(escape(atob($('#dta').value.trim()))));if(!j||typeof j.prog!=='object')throw 0;S.prog=j.prog;if(j.master)S.master=+j.master;if(j.notes&&typeof j.notes==='object')S.notes=j.notes;save();syncControls();dlg.close();start()}
+  catch(e){$('#dmsg').textContent='That code could not be read. Paste the whole code and try again.'}
+};
+$('#reset').onclick=()=>{if(confirm('Reset all flashcard progress (New, Wrong earlier, Learning, Mastered) for both modes? Your clues are kept.')){S.prog={};save();syncControls();start()}};
+
+/* go */
+if(!storeOK)$('#storewarn').hidden=false;
+syncControls();start();
+</script>
+</body>
+</html>
